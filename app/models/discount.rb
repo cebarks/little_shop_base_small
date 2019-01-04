@@ -1,7 +1,6 @@
 class Discount < ApplicationRecord
-  validates_presence_of :type, :discount, :quantity, :active
+  validates_presence_of :discount_type, :discount, :quantity, :active
   belongs_to :user
 
-  enum type: %w[Percentage Flat]
-  
+  enum discount_type: %w[Percentage Flat]
 end

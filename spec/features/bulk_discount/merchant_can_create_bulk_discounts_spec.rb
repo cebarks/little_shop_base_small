@@ -13,8 +13,9 @@ RSpec.describe "As a merchant" do
     end
 
     it "I see a 'New Bulk Discount' button to create a new coupon for my items" do
-      expect(page).to have_button('New Bulk Discount')
+      expect(page).to have_link('New Bulk Discount', href: new_dashboard_discount_path)
     end
+
     describe "When I click on the 'New Bulk Discount' button" do
       before(:each) do
         click_on 'New Bulk Discount'
@@ -33,7 +34,7 @@ RSpec.describe "As a merchant" do
           within "#discount-form" do
             fill_in :discount_quantity, with: @quantity
             fill_in :discount_discount, with: @discount
-            select @type, from: 'type'
+            select @type, from: :discount_discount_type
             click_on 'Create Discount'
           end
         end
@@ -44,7 +45,7 @@ RSpec.describe "As a merchant" do
           end
         end
 
-        it "I know see the discount listed on my dashboard" do
+        it "I now see the discount listed on my dashboard" do
           expect(current_path).to eq(dashboard_path)
           within "#discounts-table" do
             within "#discount-0" do

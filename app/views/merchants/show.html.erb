@@ -14,6 +14,10 @@
 <%= link_to 'My Items', dashboard_items_path %>
 <% end %>
 
+<% if current_merchant? %>
+<%= render 'merchants/discounts' %>
+<% end %>
+
 <% if current_admin? %>
 <%= button_to "Downgrade to User", admin_merchant_downgrade_path(@merchant), method: :patch %>
 <% end %>
@@ -25,7 +29,7 @@
     <ul>
       <% @orders.each do |order| %>
         <%= tag.li id: "order-#{order.id}" do %>
-          <%= render partial: "order_card", locals: {order: order} %>
+          <%= render partial: "merchants/order_card", locals: {order: order} %>
         <% end %>
       <% end %>
     </ul>
