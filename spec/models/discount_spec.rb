@@ -10,6 +10,14 @@ RSpec.describe Discount, type: :model do
     it {should belong_to :user}
   end
 
+  describe "Instance Methods" do
+    it "#discount_str" do
+      merchant = create(:merchant)
+      discount = Discount.create!(discount_type: 'Flat', discount: 1, quantity: 1, user: merchant)
+      expect(discount.discount_str).to eq("$1.00")
+    end
+  end
+
   describe "Class Methods" do
     describe ".discount_types_for_merchant" do
       before(:each) do
