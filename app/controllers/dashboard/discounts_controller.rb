@@ -1,4 +1,8 @@
 class Dashboard::DiscountsController < Dashboard::BaseController
+  def show
+    @discount = Discount.find(params[:id])
+  end
+
   def new
     @discount = Discount.new
     @merchant = current_user

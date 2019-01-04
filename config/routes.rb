@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     patch '/items/:id/enable', to: 'items#enable', as: 'enable_item'
     patch '/items/:id/disable', to: 'items#disable', as: 'disable_item'
 
-    resources :discounts, only: [:new, :create, :edit, :update, :destroy]
+    resources :discounts, except: [:index]
   end
   get '/profile', to: 'profile#index', as: 'profile'
 
