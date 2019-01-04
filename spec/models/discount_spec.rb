@@ -9,4 +9,26 @@ RSpec.describe Discount, type: :model do
 
     it {should belong_to :user}
   end
+
+  describe "Class Methods" do
+    describe ".discount_types_for_merchant" do
+      before(:each) do
+        @merchant = create(:merchant)
+      end
+
+      it "no prior discounts" do
+        expect(Discount.discount_types_for_merchant(@merchant)).to eq(%w[Percentage Flat])
+      end
+
+      it "prior 'Flat' discount" do
+        Discount.create!(discount_type: 'Flat', discount: 1, quantity: 1, user: @merchant)
+        expect(Discount.discount_types_for_merchant(@merchant)).to eq(%w[Flat])
+      end
+
+      it "prior 'Percentage' discount" do
+        Discount.create!(discount_type: 'Percentage', discount: 1, quantity: 1, user: @merchant)
+        expect(Discount.discount_types_for_merchant(@merchant)).to eq(%w[Percentage])
+      end
+    end
+  end
 end
