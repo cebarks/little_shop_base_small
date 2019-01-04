@@ -1,4 +1,4 @@
-class Dashboard::DiscountsController < ApplicationController
+class Dashboard::DiscountsController < Dashboard::BaseController
   def new
     @discount = Discount.new
     @merchant = current_user
@@ -14,6 +14,22 @@ class Dashboard::DiscountsController < ApplicationController
     else
       flash[:notice] = "An error occured."
       render :new
+    end
+  end
+
+  def edit
+    @discount = Discount.find(params[:id])
+    @merchant = @discount.user
+  end
+
+  def update
+    @discount = Discount.find(params[:id])
+    if @discount.update(discount_params)
+      flash[:notice] = "Your discount has been updated!"
+      redirect_to dashboard_path
+    else
+      flash[:notice] = "An error occured when trying to update your discount."
+      render :edit
     end
   end
 
