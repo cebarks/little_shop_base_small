@@ -73,14 +73,40 @@ RSpec.describe Cart do
     expect(cart.items).to eq([item_1, item_2])
   end
 
-  it '.subtotal' do
-    item_1 = create(:item)
-    cart = Cart.new({})
-    cart.add_item(item_1.id)
-    cart.add_item(item_1.id)
-    cart.add_item(item_1.id)
+  describe '.subtotal' do
+    it "normal" do
+      item_1 = create(:item)
+      cart = Cart.new({})
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
 
-    expect(cart.subtotal(item_1.id)).to eq(item_1.price * cart.total_count)
+      expect(cart.subtotal(item_1.id)).to eq(item_1.price * cart.total_count)
+    end
+
+    it "with flat discount" do
+      item_1 = create(:item)
+      discount = Discount.create!(user: item_1.user, discount: 3, quantity: 3, discount_type: 'Flat')
+
+      cart = Cart.new({})
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+
+      expect(cart.subtotal(item_1.id)).to eq((item_1.price * cart.total_count) - discount.discount)
+    end
+    
+    it "with percentage discount" do
+      item_1 = create(:item)
+      discount = Discount.create!(user: item_1.user, discount: 50, quantity: 3, discount_type: 'Percentage')
+
+      cart = Cart.new({})
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+
+      expect(cart.subtotal(item_1.id)).to eq((item_1.price * cart.total_count) * (discount.discount.to_f / 100))
+    end
   end
 
   it '.grand_total' do
@@ -93,5 +119,19 @@ RSpec.describe Cart do
     cart.add_item(item_2.id)
 
     expect(cart.grand_total).to eq(cart.subtotal(item_1.id) + cart.subtotal(item_2.id))
+  end
+
+  it '.discount?' do
+    cart = Cart.new({})
+    item_1, item_2 = create_list(:item, 2, inventory: 100)
+    5.times do
+      cart.add_item(item_1.id)
+    end
+
+    cart.add_item(item_2.id)
+    discount_1 = Discount.create!(user: item_1.user, discount_type: 'Flat', discount: 10, quantity: 3)
+
+    expect(cart.discount?(item_1.id)).to eq(discount_1)
+    expect(cart.discount?(item_2.id)).to be_falsey
   end
 end
