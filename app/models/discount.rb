@@ -19,4 +19,8 @@ class Discount < ApplicationRecord
   def discount_str
     Flat? ? number_to_currency(discount) : "#{discount}%"
   end
+
+  def self.has_discount?(item, quantity)
+    Discount.where(user: item.user).where("quantity <= #{quantity}").order("discount DESC").first
+  end
 end
