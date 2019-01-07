@@ -1,0 +1,28 @@
+<%= link_to 'New Bulk Discount', new_dashboard_discount_path %>
+
+<table id="discounts-table" class="table table-striped">
+  <thead>
+    <th>Discount Type</th>
+    <th>Quantity Required</th>
+    <th>Discount Amount</th>
+    <th>Active?</th>
+    <th>Actions</th>
+  </thead>
+  <tbody>
+    <% @discounts.each_with_index do |discount, index| %>
+    <tr id="discount-<%= index %>">
+      <td class="discount-type"> <%= discount.discount_type %></td>
+      <td class="discount-quantity"><%= discount.quantity %></td>
+      <td class="discount-discount"><%= discount.discount_str %></td>
+      <td class="discount-active"><%= discount.active? ? 'yes' : 'no'%></td>
+      <td class="discount-actions">
+        <ul class='discount-actions-list'>
+          <li><%= link_to 'Edit', edit_dashboard_discount_path(discount) %></li>
+          <li><%= link_to 'Delete', dashboard_discount_path(discount), method: :delete %></li>
+          <li><%= link_to 'View', dashboard_discount_path(discount) %></li>
+        </ul>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

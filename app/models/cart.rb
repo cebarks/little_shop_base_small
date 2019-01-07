@@ -35,12 +35,30 @@ class Cart
 
   def subtotal(item_id)
     item = Item.find(item_id)
-    item.price * count_of(item_id)
+    if discount = discount?(item_id)
+      case discount.discount_type
+      when 'Flat'
+        (item.price * count_of(item_id)) - discount.discount
+      when 'Percentage'
+        (item.price * count_of(item_id)) * (discount.discount.to_f / 100)
+      end
+    else
+      item.price * count_of(item_id)
+    end
   end
 
   def grand_total
     @contents.keys.map do |item_id|
       subtotal(item_id)
     end.sum
+  end
+
+  def discount?(item_id)
+    item = Item.find(item_id)
+    cart_qty = @contents[item_id.to_s]
+
+    return nil unless cart_qty
+
+    Discount.has_discount?(item, cart_qty)
   end
 end
