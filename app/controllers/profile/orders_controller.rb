@@ -8,11 +8,28 @@ class Profile::OrdersController < ApplicationController
   def create
     order = Order.create(user: current_user, status: :pending)
     @cart.items.each do |item|
-      order.order_items.create!(
-        item: item,
-        price: item.price,
-        quantity: @cart.count_of(item.id),
-        fulfilled: false)
+      if discount = @cart.discount?(item.id)
+        case discount.discount_type
+        when 'Flat'
+          order.order_items.create!(
+            item: item,
+            price: item.price - (discount.discount / @cart.count_of(item.id)),
+            quantity: @cart.count_of(item.id),
+            fulfilled: false)
+        when 'Percentage'
+          order.order_items.create!(
+            item: item,
+            price: item.price * (discount.discount.to_f / 100),
+            quantity: @cart.count_of(item.id),
+            fulfilled: false)
+        end
+      else
+        order.order_items.create!(
+          item: item,
+          price: item.price,
+          quantity: @cart.count_of(item.id),
+          fulfilled: false)
+      end
     end
     session[:cart] = nil
     @cart = Cart.new({})
