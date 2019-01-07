@@ -59,6 +59,6 @@ class Cart
 
     return nil unless cart_qty
 
-    Discount.where(user: item.user).where("quantity <= #{cart_qty}").order("discount ASC").first
+    Discount.has_discount?(item, cart_qty)
   end
 end
