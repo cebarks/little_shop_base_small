@@ -9,5 +9,8 @@
     <p>Quantity: <%= oitem.quantity %></p>
     <p>Subtotal: <%= number_to_currency(oitem.subtotal) %></p>
     <p>Fulfilled: <%= oitem.fulfilled ? 'Yes' : 'No' %></p>
+    <% if discount = Discount.has_discount?(oitem.item, oitem.quantity) %>
+    <p> Total Discount Applied: <%= discount.discount_str %></p>
+    <% end %>
   </div>
 </div>
