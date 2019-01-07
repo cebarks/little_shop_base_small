@@ -158,30 +158,33 @@ RSpec.describe 'Merchant Dashboard page' do
     end
     describe 'should show some statistics' do
       before :each do
-        user_1 = create(:user, city: 'Springfield', state: 'MO')
-        user_2 = create(:user, city: 'Springfield', state: 'CO')
-        user_3 = create(:user, city: 'Las Vegas', state: 'NV')
-        user_4 = create(:user, city: 'Denver', state: 'CO')
+        @user_1 = create(:user, city: 'Springfield', state: 'MO')
+        @user_2 = create(:user, city: 'Springfield', state: 'CO')
+        @user_3 = create(:user, city: 'Las Vegas', state: 'NV')
+        @user_4 = create(:user, city: 'Denver', state: 'CO')
 
-        merchant = create(:merchant)
-        @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, user: merchant, inventory: 20)
+        @merchant = create(:merchant)
+        @item_1 = create(:item, user: @merchant, inventory: 100)
+        @item_2 = create(:item, user: @merchant, inventory: 200)
+        @item_3 = create(:item, user: @merchant, inventory: 300)
+        @item_4 = create(:item, user: @merchant, inventory: 400)
 
-        @order_1 = create(:completed_order, user: user_1)
-        @oi_1a = create(:fulfilled_order_item, order: @order_1, item: @item_1, quantity: 2, price: 100)
+        @order_1 = create(:completed_order, user: @user_1)
+        @oi_1a = create(:fulfilled_order_item, order: @order_1, item: @item_1, quantity: 22, price: 22)
 
-        @order_2 = create(:completed_order, user: user_1)
-        @oi_1b = create(:fulfilled_order_item, order: @order_2, item: @item_1, quantity: 1, price: 80)
+        @order_2 = create(:completed_order, user: @user_1)
+        @oi_1b = create(:fulfilled_order_item, order: @order_2, item: @item_1, quantity: 11, price: 11)
 
-        @order_3 = create(:completed_order, user: user_2)
-        @oi_2 = create(:fulfilled_order_item, order: @order_3, item: @item_2, quantity: 5, price: 60)
+        @order_3 = create(:completed_order, user: @user_2)
+        @oi_2 = create(:fulfilled_order_item, order: @order_3, item: @item_2, quantity: 55, price: 55)
 
-        @order_4 = create(:completed_order, user: user_3)
-        @oi_3 = create(:fulfilled_order_item, order: @order_4, item: @item_3, quantity: 3, price: 40)
+        @order_4 = create(:completed_order, user: @user_3)
+        @oi_3 = create(:fulfilled_order_item, order: @order_4, item: @item_3, quantity: 34, price: 33)
 
-        @order_5 = create(:completed_order, user: user_4)
-        @oi_4 = create(:fulfilled_order_item, order: @order_5, item: @item_4, quantity: 4, price: 20)
+        @order_5 = create(:completed_order, user: @user_4)
+        @oi_4 = create(:fulfilled_order_item, order: @order_5, item: @item_4, quantity: 44, price: 44)
 
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
       end
       it 'shows top 5 items sold by quantity' do
         visit dashboard_path
@@ -189,8 +192,8 @@ RSpec.describe 'Merchant Dashboard page' do
           within '#top-5-items' do
             expect(page.all('.item')[0]).to have_content(@item_2.name)
             expect(page.all('.item')[1]).to have_content(@item_4.name)
-            expect(page.all('.item')[2]).to have_content(@item_1.name)
-            expect(page.all('.item')[3]).to have_content(@item_3.name)
+            expect(page.all('.item')[2]).to have_content(@item_3.name)
+            expect(page.all('.item')[3]).to have_content(@item_1.name)
           end
         end
       end
@@ -198,7 +201,7 @@ RSpec.describe 'Merchant Dashboard page' do
         visit dashboard_path
         within '#statistics' do
           within '#quantity-sold' do
-            expect(page).to have_content('You have sold 15 items out of 95 (15.79%)')
+            expect(page).to have_content('You have sold 166 items out of 1166 (14.24%)')
           end
         end
       end
@@ -206,9 +209,9 @@ RSpec.describe 'Merchant Dashboard page' do
         visit dashboard_path
         within '#statistics' do
           within '#top-3-states' do
-            expect(page.all('.state')[0]).to have_content('CO, quantity shipped: 9')
-            expect(page.all('.state')[1]).to have_content('MO, quantity shipped: 3')
-            expect(page.all('.state')[2]).to have_content('NV, quantity shipped: 3')
+            expect(page.all('.state')[0]).to have_content('CO, quantity shipped: 99')
+            expect(page.all('.state')[1]).to have_content('NV, quantity shipped: 34')
+            expect(page.all('.state')[2]).to have_content('MO, quantity shipped: 33')
           end
         end
       end
@@ -216,9 +219,9 @@ RSpec.describe 'Merchant Dashboard page' do
         visit dashboard_path
         within '#statistics' do
           within '#top-3-cities' do
-            expect(page.all('.city')[0]).to have_content('Springfield, CO, quantity shipped: 5')
-            expect(page.all('.city')[1]).to have_content('Denver, CO, quantity shipped: 4')
-            expect(page.all('.city')[2]).to have_content('Springfield, MO, quantity shipped: 3')
+            expect(page.all('.city')[0]).to have_content('Springfield, CO, quantity shipped: 55')
+            expect(page.all('.city')[1]).to have_content('Denver, CO, quantity shipped: 44')
+            expect(page.all('.city')[2]).to have_content('Las Vegas, NV, quantity shipped: 34')
           end
         end
       end
@@ -247,7 +250,7 @@ RSpec.describe 'Merchant Dashboard page' do
           visit dashboard_path
           within '#statistics' do
             within '#most-items-user' do
-              expect(page).to have_content('User Name 2, with 5 items')
+              expect(page).to have_content('User Name 2, with 55 items')
             end
           end
         end
@@ -266,9 +269,9 @@ RSpec.describe 'Merchant Dashboard page' do
         visit dashboard_path
         within '#statistics' do
           within '#top-3-revenue-users' do
-            expect(page.all('.user')[0]).to have_content('User Name 2, revenue: $300.00')
-            expect(page.all('.user')[1]).to have_content('User Name 1, revenue: $280.00')
-            expect(page.all('.user')[2]).to have_content('User Name 3, revenue: $120.00')
+            expect(page.all('.user')[0]).to have_content('User Name 2, revenue: $3,025.00')
+            expect(page.all('.user')[1]).to have_content('User Name 4, revenue: $1,936.00')
+            expect(page.all('.user')[2]).to have_content('User Name 3, revenue: $1,122.00')
           end
         end
       end
