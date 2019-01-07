@@ -1,0 +1,16 @@
+<%= form_for @discount, url: dashboard_discount_path, html: {id: 'discount-edit-form'} do |f| %>
+  <%= f.label :quantity %>:
+  <%= f.number_field :quantity %><br />
+
+  <%= f.label :discount_type %>:
+  <% if @merchant.discounts == [@discount] %>
+  <%= f.select :discount_type, Discount.discount_types.keys %>
+  <% else %>
+  <%= f.select :discount_type, Discount.discount_types_for_merchant(@merchant) %>
+  <% end %>
+
+  <%= f.label :discount %> (Percentage or amount in whole dollars):
+  <%= f.number_field :discount %><br />
+
+  <%= f.submit %>
+<% end %>

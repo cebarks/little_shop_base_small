@@ -72,5 +72,14 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 end
 
-def login_as_user(email, password)
+def post_login(user)
+  page.driver.post(login_path, email: user.email, password: "password")
+end
+
+def do_login(user)
+  visit login_path
+  fill_in :user_email, with: user.email
+  fill_in :user_password, with: user.password
+
+  click_on 'Log In'
 end
