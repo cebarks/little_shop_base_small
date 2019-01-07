@@ -38,5 +38,13 @@ RSpec.describe Discount, type: :model do
         expect(Discount.discount_types_for_merchant(@merchant)).to eq(%w[Percentage])
       end
     end
+
+    it ".has_discount?" do
+      item = create(:item)
+      merchant = item.user
+      discount = Discount.create!(discount_type: 'Flat', discount: 1, quantity: 2, user: merchant)
+
+      expect(Discount.has_discount?(item, 3)).to eq(discount)
+    end
   end
 end
