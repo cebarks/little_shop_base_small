@@ -121,6 +121,17 @@ class User < ApplicationRecord
   end
 
   def sales_by_month_chart
-    Order.group_by_month(:created_at, format: "%b").count
+    Order.joins(:order_items, :items)
+    .group_by_month(:created_at, format: "%b")
+    .where("items.user": self)
+    .sum("order_items.quantity * order_items.price")
+  end
+
+  def self.total_sales_chart
+    User.joins(items: { order_items: :order })
+      .select('users.*')
+      .where(orders: { status: :completed })
+      .group(:name)
+      .sum('order_items.quantity * order_items.price')
   end
 end
