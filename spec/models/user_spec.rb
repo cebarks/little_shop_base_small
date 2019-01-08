@@ -184,5 +184,18 @@ RSpec.describe User, type: :model do
 
       expect(merchant.quantity_sold_percentage_chart).to eq({:sold=>5, :total=>10})
     end
+
+    it ".sales_by_month_chart" do
+      item = create(:item, inventory: 5)
+      merchant = item.user
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Feb 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Jan 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Mar 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Apr 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Dec 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Dec 2001')), item: item, quantity: 5)
+
+      expect(merchant.sales_by_month_chart).to eq({"Apr"=>1, "Aug"=>0, "Dec"=>2, "Feb"=>1, "Jan"=>1, "Jul"=>0, "Jun"=>0, "Mar"=>1, "May"=>0, "Nov"=>0, "Oct"=>0, "Sep"=>0})
+    end
   end
 end
