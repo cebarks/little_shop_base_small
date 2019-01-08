@@ -37,6 +37,11 @@
 <% end %>
 
 <%= tag.div id: 'statistics' do %>
+  <%= tag.div id: 'sales-by-month' do %>
+    <h4>Sales By Month</h4>
+    <%= column_chart @sales_by_month_chart, id: 'monthly-sales-chart' %>
+  <% end %>
+
   <%= tag.div id: 'top-5-items' do %>
     <h4>Top 5 items sold by quantity</h4>
     <ol>

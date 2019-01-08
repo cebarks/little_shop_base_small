@@ -119,4 +119,8 @@ class User < ApplicationRecord
     qspc.delete(:percentage)
     qspc
   end
+
+  def sales_by_month_chart
+    Order.group_by_month(:created_at, format: "%b").count
+  end
 end

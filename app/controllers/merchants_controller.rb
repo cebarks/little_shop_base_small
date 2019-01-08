@@ -28,7 +28,9 @@ class MerchantsController < ApplicationController
     @most_items_user = @merchant.most_items_user
     @most_items_user = @merchant.most_items_user
     @top_3_revenue_users = @merchant.top_3_revenue_users
+
     @qsp_chart = @merchant.quantity_sold_percentage_chart
+    @sales_by_month_chart = @merchant.sales_by_month_chart
   end
 
   private
