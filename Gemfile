@@ -32,6 +32,9 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootstrap', '~> 4.0.0'
 gem 'jquery-rails', '~> 4.3.0'
 
+gem 'chartkick'
+gem 'groupdate'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -64,4 +67,3 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'simplecov'
 end
-

@@ -36,6 +36,11 @@
 <hr>
 
 <%= tag.div id: "statistics" do %>
+  <%= tag.div id: "total-sales" do %>
+    <h4>Total Sales by Merchant</h4>
+    <%= pie_chart @total_sales_chart, id: 'total-sales-chart' %>
+  <% end %>
+
   <%= tag.div id: "top-3-revenue-merchants" do %>
     <h4>Top 3 Merchants by Revenue</h4>
     <ol>

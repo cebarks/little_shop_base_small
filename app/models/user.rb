@@ -113,4 +113,25 @@ class User < ApplicationRecord
       .order('revenue desc')
       .limit(3)
   end
+
+  def quantity_sold_percentage_chart
+    qspc = quantity_sold_percentage
+    qspc.delete(:percentage)
+    qspc
+  end
+
+  def sales_by_month_chart
+    Order.joins(:order_items, :items)
+    .group_by_month(:created_at, format: "%b")
+    .where("items.user": self)
+    .sum("order_items.quantity * order_items.price")
+  end
+
+  def self.total_sales_chart
+    User.joins(items: { order_items: :order })
+      .select('users.*')
+      .where(orders: { status: :completed })
+      .group(:name)
+      .sum('order_items.quantity * order_items.price')
+  end
 end

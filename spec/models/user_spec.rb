@@ -78,6 +78,18 @@ RSpec.describe User, type: :model do
         expect(aft[0..7]).to eq('00:01:00')
       end
     end
+    it ".total_sales_chart" do
+      merchant_1, merchant_2 = create_list(:merchant, 2)
+      user_1 = create(:user)
+
+      create(:fulfilled_order_item, order: create(:completed_order, user: user_1), item: create(:item, user: merchant_1), quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, user: user_1), item: create(:item, user: merchant_2), quantity: 10)
+
+      create(:fulfilled_order_item, order: create(:order, user: user_1), item: create(:item, user: merchant_2), quantity: 5)
+      create(:fulfilled_order_item, order: create(:order, user: user_1), item: create(:item, user: merchant_1), quantity: 15)
+
+      expect(User.total_sales_chart).to eq({"Merchant Name 1"=>0.15e2, "Merchant Name 2"=>0.45e2})
+    end
   end
 
   describe 'instance methods' do
@@ -174,6 +186,30 @@ RSpec.describe User, type: :model do
         expect(@merchant.top_3_revenue_users[2]).to eq(@user_3)
         expect(@merchant.top_3_revenue_users[2].revenue.to_f).to eq(1122.0)
       end
+    end
+
+    it ".quantity_sold_percentage_chart" do
+      item = create(:item, inventory: 5)
+      merchant = item.user
+      order = create(:completed_order)
+      create(:fulfilled_order_item, order: order, item: item, quantity: 5)
+
+      expect(merchant.quantity_sold_percentage_chart).to eq({:sold=>5, :total=>10})
+    end
+
+    it ".sales_by_month_chart" do
+      item = create(:item, inventory: 5)
+      merchant = item.user
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Feb 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Jan 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Mar 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Apr 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Dec 2001')), item: item, quantity: 5)
+      create(:fulfilled_order_item, order: create(:completed_order, created_at: DateTime.parse('Dec 2001')), item: item, quantity: 5)
+
+      expected = {"Apr"=>0.375e2, "Aug"=>0, "Dec"=>0.975e2, "Feb"=>0.15e2, "Jan"=>0.225e2, "Jul"=>0, "Jun"=>0, "Mar"=>0.3e2, "May"=>0, "Nov"=>0, "Oct"=>0, "Sep"=>0}
+
+      expect(merchant.sales_by_month_chart).to eq(expected)
     end
   end
 end
