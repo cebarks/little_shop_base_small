@@ -113,4 +113,10 @@ class User < ApplicationRecord
       .order('revenue desc')
       .limit(3)
   end
+
+  def quantity_sold_percentage_chart
+    qspc = quantity_sold_percentage
+    qspc.delete(:percentage)
+    qspc
+  end
 end
