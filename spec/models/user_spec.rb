@@ -175,5 +175,14 @@ RSpec.describe User, type: :model do
         expect(@merchant.top_3_revenue_users[2].revenue.to_f).to eq(1122.0)
       end
     end
+
+    it ".quantity_sold_percentage_chart" do
+      item = create(:item, inventory: 5)
+      merchant = item.user
+      order = create(:completed_order)
+      create(:fulfilled_order_item, order: order, item: item, quantity: 5)
+
+      expect(merchant.quantity_sold_percentage_chart).to eq({:sold=>5, :total=>10})
+    end
   end
 end
