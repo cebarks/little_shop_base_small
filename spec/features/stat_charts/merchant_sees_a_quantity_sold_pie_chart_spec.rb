@@ -16,7 +16,7 @@ RSpec.describe "As a merchant" do
     end
 
     it "I see a pie chart representing my quantity sold statistic" do
-      expect(page).to have_css('#chart-1')
+      expect(page).to have_css('#quantity-sold-chart')
     end
   end
 end

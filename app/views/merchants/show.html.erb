@@ -51,7 +51,7 @@
   <%= tag.div id: 'quantity-sold' do %>
     <h4>Items Shipped as Percentage of Inventory</h4>
     <p>You have sold <%= @qsp[:sold] %> items out of <%= @qsp[:total] %> (<%= @qsp[:percentage] %>%)</p>
-    <%= pie_chart @qsp_chart %>
+    <%= pie_chart @qsp_chart, id: 'quantity-sold-chart' %>
   <% end %>
 
   <%= tag.div id: 'top-3-states' do %>
