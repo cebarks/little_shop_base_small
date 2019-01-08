@@ -45,3 +45,7 @@ create(:order_item, order: order, item: item_3, price: 3, quantity: 1, created_a
 order = create(:completed_order, user: user)
 create(:fulfilled_order_item, order: order, item: item_1, price: 1, quantity: 1, created_at: rng.rand(4).days.ago, updated_at: rng.rand(59).minutes.ago)
 create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: rng.rand(23).hour.ago, updated_at: rng.rand(59).minutes.ago)
+
+15.times do
+  create(:fulfilled_order_item, order: create(:completed_order, created_at: rng.rand(11).months.ago), item: item_1, quantity: 5)
+end
