@@ -84,6 +84,8 @@ GEM
     ffi (1.10.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    groupdate (4.1.1)
+      activesupport (>= 4.2)
     i18n (1.5.1)
       concurrent-ruby (~> 1.0)
     jbuilder (2.8.0)
@@ -232,6 +234,7 @@ DEPENDENCIES
   chartkick
   coffee-rails (~> 4.2)
   factory_bot_rails
+  groupdate
   jbuilder (~> 2.5)
   jquery-rails (~> 4.3.0)
   launchy
