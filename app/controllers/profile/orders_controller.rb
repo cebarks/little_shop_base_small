@@ -8,34 +8,29 @@ class Profile::OrdersController < ApplicationController
   def create
     order = Order.create(user: current_user, status: :pending)
     @cart.items.each do |item|
+      price = 0
       if discount = @cart.discount?(item.id)
-        case discount.discount_type
+        price = case discount.discount_type
         when 'Flat'
-          order.order_items.create!(
-            item: item,
-            price: item.price - (discount.discount / @cart.count_of(item.id)),
-            quantity: @cart.count_of(item.id),
-            fulfilled: false)
+          item.price - (discount.discount / @cart.count_of(item.id))
         when 'Percentage'
-          order.order_items.create!(
-            item: item,
-            price: item.price * (discount.discount.to_f / 100),
-            quantity: @cart.count_of(item.id),
-            fulfilled: false)
+          item.price - (item.price * (discount.discount.to_f / 100))
         end
       else
-        order.order_items.create!(
-          item: item,
-          price: item.price,
-          quantity: @cart.count_of(item.id),
-          fulfilled: false)
+        price = item.price
       end
-    end
-    session[:cart] = nil
-    @cart = Cart.new({})
-    flash[:success] = "You have successfully checked out!"
+      order.order_items.create(
+        item: item,
+        price: price,
+        quantity: @cart.count_of(item.id),
+        fulfilled: false)
 
-    redirect_to profile_path
+      session[:cart] = nil
+      @cart = Cart.new({})
+      flash[:success] = "You have successfully checked out!"
+
+      redirect_to profile_path
+    end
   end
 
   def show

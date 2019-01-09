@@ -46,6 +46,10 @@ class Dashboard::DiscountsController < Dashboard::BaseController
   private
 
   def discount_params
-    params.require(:discount).permit(:discount, :quantity, :discount_type)
+    parms = params.require(:discount).permit(:discount, :quantity, :discount_type)
+    # if parms[:discount] < 0 && parms[:discount_type] == :Flat
+    #   parms[:discount] = 0
+    # end
+    # parms
   end
 end

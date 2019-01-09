@@ -36,12 +36,17 @@ class Cart
   def subtotal(item_id)
     item = Item.find(item_id)
     if discount = discount?(item_id)
-      case discount.discount_type
+      price = case discount.discount_type
       when 'Flat'
         (item.price * count_of(item_id)) - discount.discount
       when 'Percentage'
-        (item.price * count_of(item_id)) * (discount.discount.to_f / 100)
+        (item.price * count_of(item_id)) - ((item.price * count_of(item_id)) * (discount.discount.to_f / 100))
       end
+      
+      if price < 0
+        price = 0
+      end
+      price
     else
       item.price * count_of(item_id)
     end
