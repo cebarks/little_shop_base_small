@@ -4,7 +4,7 @@
 
   <%= f.label :discount_type %>:
   <%= f.select :discount_type, Discount.discount_types_for_merchant(@merchant) %>
-
+  <br>
   <%= f.label :discount %> (Percentage or amount in whole dollars):
   <%= f.number_field :discount %><br />
 
